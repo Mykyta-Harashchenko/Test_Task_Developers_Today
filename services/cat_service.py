@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, delete
-from models.models import SpyCat
+from models.models import SpyCat, Mission
 from schemas.cats_schema import CatCreate, CatUpdate
 import httpx
 
@@ -22,7 +22,13 @@ async def create_cat(session: AsyncSession, cat_data: CatCreate) -> SpyCat:
     await session.refresh(cat)
     return cat
 
-async def delete_cat(session: AsyncSession, cat_id: int) -> None:
+async def delete_cat(session, cat_id: int):
+    result = await session.execute(
+        select(Mission).where(Mission.cat_id == cat_id)
+    )
+    missions = result.scalars().all()
+    if missions:
+        raise ValueError("Cannot delete cat: cat is assigned to one or more missions.")
     await session.execute(delete(SpyCat).where(SpyCat.id == cat_id))
     await session.commit()
 

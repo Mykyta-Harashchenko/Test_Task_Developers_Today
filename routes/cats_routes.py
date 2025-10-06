@@ -15,7 +15,10 @@ async def create_spy_cat(cat: CatCreate, db: AsyncSession = Depends(get_db)):
 
 @router.delete("/{cat_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def remove_spy_cat(cat_id: int, db: AsyncSession = Depends(get_db)):
-    await delete_cat(db, cat_id)
+    try:
+        await delete_cat(db, cat_id)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return
 
 @router.patch("/{cat_id}", response_model=CatResponse)
