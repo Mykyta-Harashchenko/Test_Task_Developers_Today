@@ -1,5 +1,7 @@
 # Spy Cats API
 
+Postman collection: https://web.postman.co/1763055f-a2ef-45a6-a17e-9d3a2b3218de
+
 ## 🚀 Quick Start Guide for Local Development
 
 ### 1. Clone the repository
